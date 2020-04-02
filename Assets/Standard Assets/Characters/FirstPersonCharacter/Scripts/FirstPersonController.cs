@@ -42,6 +42,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private bool m_Jumping;
         private AudioSource m_AudioSource;
 
+        private int m_Jumps = 2; // number of jumps allowed before landing
+        private int m_JumpCount; // number of jumps remaining 
+
         // Use this for initialization
         private void Start()
         {
@@ -55,6 +58,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
 			m_MouseLook.Init(transform , m_Camera.transform);
+
+            m_JumpCount = m_Jumps;
         }
 
 
@@ -74,6 +79,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 PlayLandingSound();
                 m_MoveDir.y = 0f;
                 m_Jumping = false;
+                m_JumpCount = m_Jumps; // reset number of jumps allowed after landing
             }
             if (!m_CharacterController.isGrounded && !m_Jumping && m_PreviouslyGrounded)
             {
@@ -119,11 +125,24 @@ namespace UnityStandardAssets.Characters.FirstPerson
                     PlayJumpSound();
                     m_Jump = false;
                     m_Jumping = true;
+                    m_JumpCount--;
                 }
             }
             else
             {
-                m_MoveDir += Physics.gravity*m_GravityMultiplier*Time.fixedDeltaTime;
+                // Check if can jump again in the air (and not falling)
+                if (m_Jump && m_Jumping && m_JumpCount > 0)
+                {
+                    m_MoveDir.y = m_JumpSpeed;
+                    PlayJumpSound();
+                    m_JumpCount--;
+                }
+                else
+                {
+                    // Don't jump right after hitting the ground if the button was pressed in midair
+                    m_Jump = false;
+                    m_MoveDir += Physics.gravity * m_GravityMultiplier * Time.fixedDeltaTime;
+                }
             }
             m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
 
@@ -131,6 +150,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
             UpdateCameraPosition(speed);
 
             m_MouseLook.UpdateCursorLock();
+
+            // Respawn after falling off the map
+            if (transform.position.y < -5)
+            {
+                transform.position = new Vector3(50, 1, 25);
+            }
         }
 
 
