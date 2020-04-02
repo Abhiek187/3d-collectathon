@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
@@ -43,7 +43,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private AudioSource m_AudioSource;
 
         private int m_Jumps = 2; // number of jumps allowed before landing
-        private int m_JumpCount; // number of jumps remaining 
+        private int m_JumpCount; // number of jumps remaining
+        private GameObject m_LastArea;
 
         // Use this for initialization
         private void Start()
@@ -60,6 +61,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 			m_MouseLook.Init(transform , m_Camera.transform);
 
             m_JumpCount = m_Jumps;
+            m_LastArea = GameObject.Find("Central Hub");
         }
 
 
@@ -264,9 +266,49 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_MouseLook.LookRotation (transform, m_Camera.transform);
         }
 
+        private IEnumerator FadeOut(AudioSource source, float fadeTime)
+        {
+            // Fade out music for fadeTime seconds
+            float startVolume = source.volume; // keep original volume to revert back
+
+            while (source.volume > 0)
+            {
+                source.volume -= startVolume * Time.deltaTime / fadeTime;
+                yield return null;
+            }
+
+            source.Stop();
+            source.volume = startVolume; // return to original volume if played later
+        }
+
+        private IEnumerator FadeIn(AudioSource source, float fadeTime)
+        {
+            // Fade in music for fadeTime seconds
+            float startVolume = source.volume; // keep original volume to set at the end
+            source.volume = 0;
+            source.Play();
+
+            while (source.volume < startVolume)
+            {
+                source.volume += startVolume * Time.deltaTime / fadeTime;
+                yield return null;
+            }
+
+            source.volume = startVolume; // return to original volume
+        }
+
 
         private void OnControllerColliderHit(ControllerColliderHit hit)
         {
+            // Change audio track if player is in another terrain
+            if (hit.gameObject != m_LastArea)
+            {
+                // Crossfade between tracks
+                StartCoroutine(FadeOut(m_LastArea.GetComponent<AudioSource>(), 1f));
+                StartCoroutine(FadeIn(hit.gameObject.GetComponent<AudioSource>(), 1f));
+                m_LastArea = hit.gameObject;
+            }
+
             Rigidbody body = hit.collider.attachedRigidbody;
             //dont move the rigidbody if the character is on top of it
             if (m_CollisionFlags == CollisionFlags.Below)
