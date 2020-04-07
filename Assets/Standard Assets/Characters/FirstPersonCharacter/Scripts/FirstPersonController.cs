@@ -301,7 +301,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private void OnControllerColliderHit(ControllerColliderHit hit)
         {
             // Change audio track if player is in another terrain
-            if (hit.gameObject != m_LastArea)
+            if (hit.gameObject.CompareTag("Ground") && hit.gameObject != m_LastArea)
             {
                 // Crossfade between tracks
                 StartCoroutine(FadeOut(m_LastArea.GetComponent<AudioSource>(), 1f));
