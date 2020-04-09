@@ -626,6 +626,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
+      propertyPath: m_CorrectSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 93f1cdf8ed6838b48a12cd44bbc4eacb, type: 3}
+    - target: {fileID: 11400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
+      propertyPath: m_WrongSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 30e9c6c4090162642b8960875675e644, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
 --- !u!1 &157650489
@@ -1196,7 +1204,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: a1b323ee3ba60f34abf7688525142607, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 68
+      value: 71
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: a1b323ee3ba60f34abf7688525142607, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1944,7 +1952,7 @@ GameObject:
   m_Component:
   - component: {fileID: 479378749}
   m_Layer: 0
-  m_Name: Room (1)
+  m_Name: Room 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3068,7 +3076,7 @@ GameObject:
   m_Component:
   - component: {fileID: 780943628}
   m_Layer: 0
-  m_Name: Room (2)
+  m_Name: Room 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3455,7 +3463,7 @@ GameObject:
   m_Component:
   - component: {fileID: 967276889}
   m_Layer: 0
-  m_Name: Room (3)
+  m_Name: Room 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5083,7 +5091,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1697691609}
   m_Layer: 0
-  m_Name: Room (6)
+  m_Name: Room 6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5327,7 +5335,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1788125329}
   m_Layer: 0
-  m_Name: Room (5)
+  m_Name: Room 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5577,7 +5585,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1850949500}
   m_Layer: 0
-  m_Name: Room
+  m_Name: Room 0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6095,7 +6103,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2138243804}
   m_Layer: 0
-  m_Name: Room (4)
+  m_Name: Room 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -28,6 +28,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
         [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
 
+        [SerializeField] private AudioClip m_CorrectSound;
+        [SerializeField] private AudioClip m_WrongSound;
+
         private Camera m_Camera;
         private bool m_Jump;
         private float m_YRotation;
@@ -45,6 +48,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private int m_Jumps = 2; // number of jumps allowed before landing
         private int m_JumpCount; // number of jumps remaining
         private GameObject m_LastArea;
+        private int roomNum = 0; // # of forest room
+        private Vector3[] roomCenters = new Vector3[7];
 
         // Use this for initialization
         private void Start()
@@ -62,6 +67,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             m_JumpCount = m_Jumps;
             m_LastArea = GameObject.Find("Central Hub");
+
+            // Get center of each forest room
+            for (int r = 0; r <= 6; r++)
+            {
+                roomCenters[r] = GameObject.Find($"Room {r}").transform.position;
+            }
         }
 
 
@@ -157,6 +168,130 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (transform.position.y < -5)
             {
                 transform.position = new Vector3(50, 1, 25);
+            }
+
+            CheckForestState();
+        }
+
+
+        private void CheckForestState()
+        {
+            // Check if in the forest area
+            if (transform.position.x < 75 || transform.position.z < 50) return;
+
+            bool movedForward = transform.position.z >= roomCenters[roomNum].z + 4;
+            bool movedBack = transform.position.z <= roomCenters[roomNum].z - 4;
+            bool movedRight = transform.position.x >= roomCenters[roomNum].x + 4;
+            bool movedLeft = transform.position.x <= roomCenters[roomNum].x - 4;
+            bool notInRoom = movedForward || movedBack || movedRight || movedLeft;
+
+            // Check if player moved correctly in the forest maze
+            switch (roomNum)
+            {
+                case 0:
+                    // Forward (moving back will exit the area)
+                    if (movedForward)
+                    {
+                        roomNum++;
+                        transform.position = roomCenters[roomNum];
+                        AudioSource.PlayClipAtPoint(m_CorrectSound, transform.position);
+                    }
+                    else if (movedLeft || movedRight)
+                    {
+                        transform.position = roomCenters[0];
+                        AudioSource.PlayClipAtPoint(m_WrongSound, transform.position);
+                    }
+
+                    break;
+                case 1:
+                    // Right
+                    if (movedRight)
+                    {
+                        roomNum++;
+                        transform.position = roomCenters[roomNum];
+                        AudioSource.PlayClipAtPoint(m_CorrectSound, transform.position);
+                    }
+                    else if (notInRoom)
+                    {
+                        roomNum = 0;
+                        transform.position = roomCenters[roomNum];
+                        AudioSource.PlayClipAtPoint(m_WrongSound, transform.position);
+                    }
+
+                    break;
+                case 2:
+                    // Left
+                    if (movedLeft)
+                    {
+                        roomNum++;
+                        transform.position = roomCenters[roomNum];
+                        AudioSource.PlayClipAtPoint(m_CorrectSound, transform.position);
+                    }
+                    else if (notInRoom)
+                    {
+                        roomNum = 0;
+                        transform.position = roomCenters[roomNum];
+                        AudioSource.PlayClipAtPoint(m_WrongSound, transform.position);
+                    }
+
+                    break;
+                case 3:
+                    // Forward
+                    if (movedForward)
+                    {
+                        roomNum++;
+                        transform.position = roomCenters[roomNum];
+                        AudioSource.PlayClipAtPoint(m_CorrectSound, transform.position);
+                    }
+                    else if (notInRoom)
+                    {
+                        roomNum = 0;
+                        transform.position = roomCenters[roomNum];
+                        AudioSource.PlayClipAtPoint(m_WrongSound, transform.position);
+                    }
+
+                    break;
+                case 4:
+                    // Left
+                    if (movedLeft)
+                    {
+                        roomNum++;
+                        transform.position = roomCenters[roomNum];
+                        AudioSource.PlayClipAtPoint(m_CorrectSound, transform.position);
+                    }
+                    else if (notInRoom)
+                    {
+                        roomNum = 0;
+                        transform.position = roomCenters[roomNum];
+                        AudioSource.PlayClipAtPoint(m_WrongSound, transform.position);
+                    }
+
+                    break;
+                case 5:
+                    // Right
+                    if (movedRight)
+                    {
+                        roomNum++;
+                        transform.position = roomCenters[roomNum];
+                        AudioSource.PlayClipAtPoint(m_CorrectSound, transform.position);
+                    }
+                    else if (notInRoom)
+                    {
+                        roomNum = 0;
+                        transform.position = roomCenters[roomNum];
+                        AudioSource.PlayClipAtPoint(m_WrongSound, transform.position);
+                    }
+
+                    break;
+                default:
+                    // Goal (Any direction takes you back to start)
+                    if (notInRoom)
+                    {
+                        roomNum = 0;
+                        transform.position = roomCenters[roomNum];
+                    }
+
+                    break;
             }
         }
 
