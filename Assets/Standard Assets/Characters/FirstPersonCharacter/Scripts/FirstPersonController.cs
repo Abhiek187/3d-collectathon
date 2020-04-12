@@ -51,6 +51,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private int roomNum = 0; // # of forest room
         private Vector3[] roomCenters = new Vector3[7];
 
+        public bool onCarpet = false; // access this variable from MagicCarpetScript
+
         // Use this for initialization
         private void Start()
         {
@@ -443,6 +445,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 StartCoroutine(FadeIn(hit.gameObject.GetComponent<AudioSource>(), 1f));
                 m_LastArea = hit.gameObject;
             }
+                    
+            onCarpet = hit.gameObject.name == "Carpet";
 
             Rigidbody body = hit.collider.attachedRigidbody;
             //dont move the rigidbody if the character is on top of it
