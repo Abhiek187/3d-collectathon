@@ -9,63 +9,61 @@ public class MagicCarpetScript : MonoBehaviour
     [SerializeField] private float speed;
 
     private float timer = 0f;
-    private Transform start;
-    private Transform end;
-    private enum State { ToStart, ToEnd, AtStart, AtEnd }; // the 4 parts of the animation
+    private Transform nextPoint;
+    private int nextIndex = 2;
+    private Vector3 nextPosition;
+    private enum State { Moving, AtRest }; // the 2 parts of the animation
     private State currentState;
     private bool onCarpet = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        start = transform.parent.GetChild(1);
-        end = transform.parent.GetChild(2);
-        currentState = State.ToEnd; // start going to the end point
+        nextPoint = transform.parent.GetChild(nextIndex);
+        nextPosition = nextPoint.position + Vector3.up; // stay above the waypoint markers
+        currentState = State.Moving; // start going to each waypoint
     }
 
     // Update is called once per frame
     void Update()
     {
         onCarpet = GameObject.Find("FPSController").GetComponent<FirstPersonController>().onCarpet;
-        if (!onCarpet) return;
-        /* Platform animation:
-         * 1. Move to end point
-         * 2. Stop for 1 second
-         * 3. Move to start point
-         * 4. Stop for another second
+        if (!onCarpet) return; // only move the carpet if the player is on it
+
+        /* Carpet animation:
+         * 1. Start at start point
+         * 2. Turn and move to each waypoint
+         * 3. At the end, stop for a second
+         * 4. Turn around and head back to start
          */
-        if (currentState == State.ToEnd)
+        if (currentState == State.Moving)
         {
-            if (Vector3.Distance(transform.position, end.position) > 0)
+            if (Vector3.Distance(transform.position, nextPosition) > 0)
             {
                 // Rotate in the direction of next point
-                Vector3 direction = (end.position - transform.position).normalized;
+                Vector3 direction = (nextPosition - transform.position).normalized;
                 Quaternion angle = Quaternion.LookRotation(direction);
                 transform.rotation = Quaternion.Slerp(transform.rotation, angle,
                     Time.deltaTime * speed);
 
-                transform.position = Vector3.MoveTowards(transform.position, end.position, Time.deltaTime * speed);
-            }
-            else
-            {
-                currentState = State.AtEnd; // we reached the end, now rest
-            }
-        }
-        else if (currentState == State.ToStart)
-        {
-            if (Vector3.Distance(transform.position, start.position) > 0)
-            {
-                // Rotate in the direction of next point
-                Vector3 direction = (start.position - transform.position).normalized;
-                Quaternion angle = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, angle,
+                transform.position = Vector3.MoveTowards(transform.position, nextPosition,
                     Time.deltaTime * speed);
-
-                transform.position = Vector3.MoveTowards(transform.position, start.position, Time.deltaTime * speed);
             }
             else
             {
-                currentState = State.AtStart; // we reached the start, now rest
+                nextIndex++;
+
+                // Turn to the next waypoint, or stop if at the end
+                if (nextIndex == transform.parent.childCount)
+                {
+                    currentState = State.AtRest;
+                }
+                else
+                {
+                    nextPoint = transform.parent.GetChild(nextIndex);
+                    nextPosition = nextPoint.position +
+                        (nextPoint.name == "End Point" ? Vector3.zero : Vector3.up);
+                }
             }
         }
         else
@@ -74,9 +72,12 @@ public class MagicCarpetScript : MonoBehaviour
 
             if (timer >= 1)
             {
-                // Reset the timer and change state
+                // Reset the timer and head back to start
                 timer = 0;
-                currentState = currentState == State.AtStart ? State.ToEnd : State.ToStart;
+                currentState = State.Moving;
+                nextIndex = 1;
+                nextPoint = transform.parent.GetChild(nextIndex);
+                nextPosition = nextPoint.position;
             }
         }
     }
