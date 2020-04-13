@@ -5,7 +5,7 @@ using UnityEngine;
 public class SunScript : MonoBehaviour
 {
     [SerializeField] private Material nightSky;
-    [SerializeField] private AudioClip fireworks;
+    [SerializeField] private ParticleSystem fireworks;
 
     private Transform gems;
     private float duration = 5f;
@@ -40,7 +40,8 @@ public class SunScript : MonoBehaviour
             Destroy(gameObject);
             RenderSettings.skybox = nightSky;
             Vector3 playerPosition = GameObject.Find("FPSController").transform.position;
-            AudioSource.PlayClipAtPoint(fireworks, playerPosition);
+            fireworks.Play();
+            fireworks.GetComponent<AudioSource>().Play();
         }
     }
 }
