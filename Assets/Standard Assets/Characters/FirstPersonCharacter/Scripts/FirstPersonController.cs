@@ -49,7 +49,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private int m_JumpCount; // number of jumps remaining
         private GameObject m_LastArea;
         private int roomNum = 0; // # of forest room
-        private Vector3[] roomCenters = new Vector3[7];
+        private readonly Vector3[] roomCenters = new Vector3[7];
 
         public bool onCarpet = false; // access this variable from MagicCarpetScript
 
