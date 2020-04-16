@@ -6,7 +6,7 @@ using UnityEngine;
 public class TextScript : MonoBehaviour
 {
     private TextMeshProUGUI textUI;
-    private int health = 3;
+    private int health = 4;
     private Transform megaGems;
     private int megaGemsTotal;
     private int miniGems = 0;
@@ -22,8 +22,8 @@ public class TextScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        textUI.SetText($"♥ <color=red>{health}</color>\n" +
-            $"Mega Gems: <color=yellow>{megaGemsTotal - megaGems.childCount}/{megaGemsTotal}</color>\n" +
-            $"💎x<color=blue>{miniGems}</color>");
+        textUI.SetText($"<size=100><sprite={health}></size>\n" + // sprite # corresponds to # of hearts
+            $"<sprite=6> x <color=yellow>{megaGemsTotal - megaGems.childCount}/{megaGemsTotal}</color>\n" +
+            $"<sprite=5> x <color=blue>0</color>");
     }
 }

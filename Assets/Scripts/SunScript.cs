@@ -10,7 +10,7 @@ public class SunScript : MonoBehaviour
 
     private Transform gems;
     private TextMeshProUGUI congratsText;
-    private float duration = 5f;
+    private float duration = 3f;
     private float intensity;
 
     // Start is called before the first frame update
