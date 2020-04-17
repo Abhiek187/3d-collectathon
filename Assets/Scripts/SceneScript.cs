@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SceneScript : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI progressText;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Image blackScreen;
 
     private void Start()
     {
@@ -23,7 +26,15 @@ public class SceneScript : MonoBehaviour
         {
             progressText.gameObject.SetActive(true);
         }
-        
+
+        StartCoroutine(FadeTo(scene));
+    }
+
+    private IEnumerator FadeTo(string scene)
+    {
+        // Cue fade out animation and load scene when done
+        animator.SetBool("Fade", true);
+        yield return new WaitUntil(() => blackScreen.color.a == 1);
         StartCoroutine(AsyncSceneLoader(scene));
     }
 
