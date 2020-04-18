@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SnowballScript : MonoBehaviour
 {
+    [SerializeField] private float pushButtonTime;
+    [SerializeField] private Material endButtonMaterial;
+
     private Vector3 originalSize;
     private Vector3 originalPosition;
     private Rigidbody rigidBody;
@@ -42,5 +45,30 @@ public class SnowballScript : MonoBehaviour
             transform.localScale -=
                 Vector3.one * Time.deltaTime * rigidBody.velocity.magnitude * meltRate;
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name == "Button"
+            && collision.gameObject.GetComponent<Renderer>().sharedMaterial != endButtonMaterial)
+        {
+            StartCoroutine(PushButton(collision.gameObject));
+        }
+    }
+
+    private IEnumerator PushButton(GameObject button)
+    {
+        // Move button down and turn it green
+        Vector3 endPosition = button.transform.position + Vector3.down * 2;
+        float timer = 0f;
+
+        while (Vector3.Distance(button.transform.position, endPosition) > 0.01)
+        {
+            timer += Time.deltaTime;
+            button.transform.position = Vector3.Slerp(button.transform.position, endPosition, timer / pushButtonTime);
+            yield return null;
+        }
+        
+        button.GetComponent<Renderer>().material = endButtonMaterial;
     }
 }

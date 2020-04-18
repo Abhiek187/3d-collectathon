@@ -24,6 +24,6 @@ public class TextScript : MonoBehaviour
     {
         textUI.SetText($"<size=100><sprite={health}></size>\n" + // sprite # corresponds to # of hearts
             $"<sprite=6> x <color=yellow>{megaGemsTotal - megaGems.childCount}/{megaGemsTotal}</color>\n" +
-            $"<sprite=5> x <color=blue>0</color>");
+            $"<sprite=5> x <color=blue>{miniGems}</color>");
     }
 }
