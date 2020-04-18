@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class SnowballScript : MonoBehaviour
 {
-    [SerializeField] private float pushButtonTime;
     [SerializeField] private Material endButtonMaterial;
+    [SerializeField] private float pushButtonTime;
 
     private Vector3 originalSize;
     private Vector3 originalPosition;
@@ -49,7 +49,7 @@ public class SnowballScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.name == "Button"
+        if (collision.gameObject.CompareTag("Button")
             && collision.gameObject.GetComponent<Renderer>().sharedMaterial != endButtonMaterial)
         {
             StartCoroutine(PushButton(collision.gameObject));
@@ -70,5 +70,6 @@ public class SnowballScript : MonoBehaviour
         }
         
         button.GetComponent<Renderer>().material = endButtonMaterial;
+        GameObject.Find("Hidden Platform").GetComponent<RaisePlatformScript>().buttonsPressed++;
     }
 }
