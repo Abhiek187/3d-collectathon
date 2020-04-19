@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
@@ -33,7 +35,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private Camera m_Camera;
         private bool m_Jump;
-        private float m_YRotation;
+        //private float m_YRotation;
         private Vector2 m_Input;
         private Vector3 m_MoveDir = Vector3.zero;
         private CharacterController m_CharacterController;
@@ -45,8 +47,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private bool m_Jumping;
         private AudioSource m_AudioSource;
 
-        private int m_Jumps = 2; // number of jumps allowed before landing
+        private const int m_Jumps = 2; // number of jumps allowed before landing
         private int m_JumpCount; // number of jumps remaining
+        private Dictionary<GameObject, Vector3> m_respawnAreas;
         private GameObject m_LastArea;
         private int roomNum = 0; // # of forest room
         private readonly Vector3[] roomCenters = new Vector3[7];
@@ -68,13 +71,23 @@ namespace UnityStandardAssets.Characters.FirstPerson
 			m_MouseLook.Init(transform , m_Camera.transform);
 
             m_JumpCount = m_Jumps;
-            m_LastArea = GameObject.Find("Central Hub");
 
             // Get center of each forest room
             for (int r = 0; r <= 6; r++)
             {
                 roomCenters[r] = GameObject.Find($"Room {r}").transform.position;
             }
+
+            // Associate each area w/ a respawn point
+            m_respawnAreas = new Dictionary<GameObject, Vector3>()
+            {
+                { GameObject.Find("Central Hub"), new Vector3(50, 1, 25) },
+                { GameObject.Find("Desert"), new Vector3(80, 1, -2) },
+                { GameObject.Find("Fire"), new Vector3(15, 1, 4) }, // don't respawn on lava
+                { GameObject.Find("Forest"), roomCenters[0] },
+                { GameObject.Find("Snow"), new Vector3(12, 1, 53) }
+            };
+            m_LastArea = m_respawnAreas.Keys.ElementAt(0);
         }
 
 
@@ -115,15 +128,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void FixedUpdate()
         {
-            float speed;
-            GetInput(out speed);
+            GetInput(out float speed);
             // always move along the camera forward as it is the direction that it being aimed at
             Vector3 desiredMove = transform.forward*m_Input.y + transform.right*m_Input.x;
 
             // get a normal for the surface that is being touched to move along it
-            RaycastHit hitInfo;
-            Physics.SphereCast(transform.position, m_CharacterController.radius, Vector3.down, out hitInfo,
-                               m_CharacterController.height/2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
+            Physics.SphereCast(transform.position, m_CharacterController.radius, Vector3.down, out RaycastHit hitInfo,
+                               m_CharacterController.height / 2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
             desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
 
             m_MoveDir.x = desiredMove.x*speed;
@@ -169,7 +180,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // Respawn after falling off the map
             if (transform.position.y < -5)
             {
-                transform.position = new Vector3(50, 1, 25);
+                transform.position = m_respawnAreas[m_LastArea];
             }
 
             CheckForestState();
