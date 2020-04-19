@@ -853,6 +853,10 @@ PrefabInstance:
       propertyPath: m_WrongSound
       value: 
       objectReference: {fileID: 8300000, guid: 30e9c6c4090162642b8960875675e644, type: 3}
+    - target: {fileID: 11400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
+      propertyPath: m_HurtSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 4a84c4d417176b44a99b0280ada8ebeb, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
 --- !u!1 &102596000

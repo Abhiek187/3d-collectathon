@@ -32,6 +32,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         [SerializeField] private AudioClip m_CorrectSound;
         [SerializeField] private AudioClip m_WrongSound;
+        [SerializeField] private AudioClip m_HurtSound;
 
         private Camera m_Camera;
         private bool m_Jump;
@@ -55,6 +56,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private readonly Vector3[] roomCenters = new Vector3[7];
 
         public bool onCarpet = false; // access this variable from MagicCarpetScript
+        public int m_Health = 4;
 
         // Use this for initialization
         private void Start()
@@ -181,6 +183,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (transform.position.y < -5)
             {
                 transform.position = m_respawnAreas[m_LastArea];
+                m_Health = m_Health == 0 ? 4 : m_Health - 1;
+                AudioSource.PlayClipAtPoint(m_HurtSound, transform.position);
             }
 
             CheckForestState();
@@ -459,9 +463,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
             else if (hit.gameObject.name == "Fire")
             {
                 // Take damage and go back to respawn point
-                print("MY LEG!");
                 GameObject carpet = GameObject.Find("Carpet");
                 transform.position = m_respawnAreas[carpet];
+                m_Health = m_Health == 0 ? 4 : m_Health - 1;
+                AudioSource.PlayClipAtPoint(m_HurtSound, transform.position);
             }
                     
             onCarpet = hit.gameObject.name == "Carpet";

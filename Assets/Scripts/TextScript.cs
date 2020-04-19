@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class TextScript : MonoBehaviour
 {
     private TextMeshProUGUI textUI;
-    private int health = 4;
+    private int health;
     private Transform megaGems;
     private int megaGemsTotal;
     private int miniGems = 0;
@@ -22,6 +23,8 @@ public class TextScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        health = GameObject.Find("FPSController").GetComponent<FirstPersonController>().m_Health;
+
         textUI.SetText($"<size=100><sprite={health}></size>\n" + // sprite # corresponds to # of hearts
             $"<sprite=6> x <color=yellow>{megaGemsTotal - megaGems.childCount}/{megaGemsTotal}</color>\n" +
             $"<sprite=5> x <color=blue>{miniGems}</color>");
