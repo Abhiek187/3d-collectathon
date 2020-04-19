@@ -10,7 +10,8 @@ public class TextScript : MonoBehaviour
     private int health;
     private Transform megaGems;
     private int megaGemsTotal;
-    private int miniGems = 0;
+    private Transform miniGems;
+    private int miniGemsTotal;
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +19,8 @@ public class TextScript : MonoBehaviour
         textUI = GetComponent<TextMeshProUGUI>();
         megaGems = GameObject.Find("Mega Gems").transform;
         megaGemsTotal = megaGems.childCount;
+        miniGems = GameObject.Find("Mini Gems").transform;
+        miniGemsTotal = miniGems.childCount;
     }
 
     // Update is called once per frame
@@ -27,6 +30,6 @@ public class TextScript : MonoBehaviour
 
         textUI.SetText($"<size=100><sprite={health}></size>\n" + // sprite # corresponds to # of hearts
             $"<sprite=6> x <color=yellow>{megaGemsTotal - megaGems.childCount}/{megaGemsTotal}</color>\n" +
-            $"<sprite=5> x <color=blue>{miniGems}</color>");
+            $"<sprite=5> x <color=blue>{miniGemsTotal - miniGems.childCount}</color>");
     }
 }
