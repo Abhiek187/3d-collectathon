@@ -83,7 +83,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 { GameObject.Find("Central Hub"), new Vector3(50, 1, 25) },
                 { GameObject.Find("Desert"), new Vector3(80, 1, -2) },
-                { GameObject.Find("Fire"), new Vector3(15, 1, 4) }, // don't respawn on lava
+                { GameObject.Find("Carpet"), new Vector3(15, 1, 4) }, // don't respawn on lava
                 { GameObject.Find("Forest"), roomCenters[0] },
                 { GameObject.Find("Snow"), new Vector3(12, 1, 53) }
             };
@@ -455,6 +455,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 StartCoroutine(FadeOut(m_LastArea.GetComponent<AudioSource>(), 1f));
                 StartCoroutine(FadeIn(hit.gameObject.GetComponent<AudioSource>(), 1f));
                 m_LastArea = hit.gameObject;
+            }
+            else if (hit.gameObject.name == "Fire")
+            {
+                // Take damage and go back to respawn point
+                print("MY LEG!");
+                GameObject carpet = GameObject.Find("Carpet");
+                transform.position = m_respawnAreas[carpet];
             }
                     
             onCarpet = hit.gameObject.name == "Carpet";

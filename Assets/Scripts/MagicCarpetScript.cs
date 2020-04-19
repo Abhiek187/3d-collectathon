@@ -28,7 +28,11 @@ public class MagicCarpetScript : MonoBehaviour
     void Update()
     {
         onCarpet = GameObject.Find("FPSController").GetComponent<FirstPersonController>().onCarpet;
-        if (!onCarpet) return; // only move the carpet if the player is on it
+        if (!onCarpet)
+        {
+            ResetPosition();
+            return; // only move the carpet if the player is on it
+        }
 
         /* Carpet animation:
          * 1. Start at start point
@@ -80,5 +84,17 @@ public class MagicCarpetScript : MonoBehaviour
                 nextPosition = nextPoint.position;
             }
         }
+    }
+
+    private void ResetPosition()
+    {
+        // Put carpet back at the beginning in case player falls or gets hurt
+        transform.position = transform.parent.GetChild(1).transform.position; // move carpet back to start point
+        transform.rotation = Quaternion.Euler(0, 180, 0);
+
+        nextIndex = 2;
+        nextPoint = transform.parent.GetChild(nextIndex);
+        nextPosition = nextPoint.position + Vector3.up;
+        currentState = State.Moving;
     }
 }
