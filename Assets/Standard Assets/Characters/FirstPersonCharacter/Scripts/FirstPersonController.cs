@@ -407,7 +407,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // only if the player is going to a run, is running and the fovkick is to be used
             if (m_IsWalking != waswalking && m_UseFovKick && m_CharacterController.velocity.sqrMagnitude > 0)
             {
-                StopAllCoroutines();
+                //StopAllCoroutines(); // messes with the fade in & fade out coroutines
                 StartCoroutine(!m_IsWalking ? m_FovKick.FOVKickUp() : m_FovKick.FOVKickDown());
             }
         }
@@ -436,17 +436,17 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private IEnumerator FadeIn(AudioSource source, float fadeTime)
         {
             // Fade in music for fadeTime seconds
-            float startVolume = source.volume; // keep original volume to set at the end
+            float endVolume = source.volume; // keep original volume to set at the end
             source.volume = 0;
             source.Play();
 
-            while (source.volume < startVolume)
+            while (source.volume < endVolume)
             {
-                source.volume += startVolume * Time.deltaTime / fadeTime;
+                source.volume += endVolume * Time.deltaTime / fadeTime;
                 yield return null;
             }
 
-            source.volume = startVolume; // return to original volume
+            source.volume = endVolume; // return to original volume
         }
 
 
