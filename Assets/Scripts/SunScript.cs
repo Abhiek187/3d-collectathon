@@ -8,17 +8,24 @@ public class SunScript : MonoBehaviour
     [SerializeField] private Material nightSky;
     [SerializeField] private ParticleSystem fireworks;
 
-    private Transform gems;
+    private Transform megaGems;
+    private Transform miniGems;
+    private int miniGemsTotal;
     private TextMeshProUGUI congratsText;
-    private float duration = 3f;
+    private GameObject restartButton;
+    private const float duration = 3f;
     private float intensity;
 
     // Start is called before the first frame update
     void Start()
     {
-        gems = GameObject.Find("Mega Gems").transform;
+        megaGems = GameObject.Find("Mega Gems").transform;
+        miniGems = GameObject.Find("Mini Gems").transform;
+        miniGemsTotal = miniGems.childCount;
         congratsText = GameObject.Find("Congrats").GetComponent<TextMeshProUGUI>();
         congratsText.gameObject.SetActive(false); // hide congrats message initially
+        restartButton = GameObject.Find("Restart Button");
+        restartButton.SetActive(false);
         intensity = GetComponent<Light>().intensity;
     }
 
@@ -26,7 +33,7 @@ public class SunScript : MonoBehaviour
     void Update()
     {
         // When all the mega gems have been collected, cue to ending
-        if (gems.childCount == 0)
+        if (megaGems.childCount == 0)
         {
             NightTransition();
         }
@@ -42,8 +49,15 @@ public class SunScript : MonoBehaviour
         {
             intensity = 0;
             RenderSettings.skybox = nightSky; // make the sky night
+
+            int miniGemsCollected = miniGemsTotal - miniGems.childCount;
+            congratsText.SetText($"Well Done!\n" +
+                $"High Score: <sprite=5> {miniGemsCollected}\n" +
+                $"<color=red>New Record!</color>");
             congratsText.gameObject.SetActive(true); // show congrats message
+            restartButton.SetActive(true);
             StartCoroutine(FadeInText(congratsText));
+
             fireworks.Play(); // show fireworks
             fireworks.GetComponent<AudioSource>().Play();
         }

@@ -30,6 +30,11 @@ public class SceneScript : MonoBehaviour
         StartCoroutine(FadeTo(scene));
     }
 
+    public void RestartScene(string scene)
+    {
+        SceneManager.LoadScene(scene);
+    }
+
     private IEnumerator FadeTo(string scene)
     {
         // Cue fade out animation and load scene when done
