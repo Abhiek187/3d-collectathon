@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -15,6 +16,7 @@ public class SunScript : MonoBehaviour
     private GameObject restartButton;
     private const float duration = 3f;
     private float intensity;
+    private float gameTimer = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +34,11 @@ public class SunScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (intensity != 0)
+        {
+            gameTimer += Time.deltaTime; // prevent the timer from going up forever
+        }
+
         // When all the mega gems have been collected, cue to ending
         if (megaGems.childCount == 0)
         {
@@ -49,10 +56,14 @@ public class SunScript : MonoBehaviour
         {
             intensity = 0;
             RenderSettings.skybox = nightSky; // make the sky night
-
             int miniGemsCollected = miniGemsTotal - miniGems.childCount;
+            // Get time played in minutes and seconds
+            string timeStr = TimeSpan.FromSeconds(gameTimer).ToString(@"mm\:ss");
+
             congratsText.SetText($"Well Done!\n" +
                 $"High Score: <sprite=5> {miniGemsCollected}\n" +
+                $"<color=red>New Record!</color>\n" +
+                $"Time: {timeStr}\n" +
                 $"<color=red>New Record!</color>");
             congratsText.gameObject.SetActive(true); // show congrats message
             restartButton.SetActive(true);
