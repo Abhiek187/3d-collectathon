@@ -17,6 +17,9 @@ public class SunScript : MonoBehaviour
     private const float duration = 3f;
     private float intensity;
     private float gameTimer = 0f;
+    // Keys used for PlayerPrefs
+    private const string gemsKey = "gems";
+    private const string timeKey = "time";
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +32,14 @@ public class SunScript : MonoBehaviour
         restartButton = GameObject.Find("Restart Button");
         restartButton.SetActive(false);
         intensity = GetComponent<Light>().intensity;
+
+        // Check if save data exists, else create it
+        if (!PlayerPrefs.HasKey(gemsKey) || !PlayerPrefs.HasKey(timeKey))
+        {
+            if (!PlayerPrefs.HasKey(gemsKey)) PlayerPrefs.SetInt(gemsKey, 0); // default: 0 mini gems
+            if (!PlayerPrefs.HasKey(timeKey)) PlayerPrefs.SetFloat(timeKey, float.MaxValue); // default: 10.8 nonillion years!!!
+            PlayerPrefs.Save();
+        }
     }
 
     // Update is called once per frame
@@ -57,14 +68,8 @@ public class SunScript : MonoBehaviour
             intensity = 0;
             RenderSettings.skybox = nightSky; // make the sky night
             int miniGemsCollected = miniGemsTotal - miniGems.childCount;
-            // Get time played in minutes and seconds
-            string timeStr = TimeSpan.FromSeconds(gameTimer).ToString(@"mm\:ss");
 
-            congratsText.SetText($"Well Done!\n" +
-                $"High Score: <sprite=5> {miniGemsCollected}\n" +
-                $"<color=red>New Record!</color>\n" +
-                $"Time: {timeStr}\n" +
-                $"<color=red>New Record!</color>");
+            congratsText.SetText(CreateTextString(miniGemsCollected, gameTimer));
             congratsText.gameObject.SetActive(true); // show congrats message
             restartButton.SetActive(true);
             StartCoroutine(FadeInText(congratsText));
@@ -72,6 +77,39 @@ public class SunScript : MonoBehaviour
             fireworks.Play(); // show fireworks
             fireworks.GetComponent<AudioSource>().Play();
         }
+    }
+
+    private string CreateTextString(int gems, float time)
+    {
+        // Compare gem and time values from PlayerPrefs
+        string res = $"Well Done!\n";
+
+        if (gems > PlayerPrefs.GetInt(gemsKey))
+        {
+            PlayerPrefs.SetInt(gemsKey, gems);
+            res += $"Gems: <sprite=5> {gems} <color=yellow>New Record!</color>\n";
+        }
+        else
+        {
+            res += $"Gems: <sprite=5> {gems} (Best: <sprite=5> {PlayerPrefs.GetInt(gemsKey)})\n";
+        }
+
+        // Get time played in minutes and seconds
+        string timeStr = TimeSpan.FromSeconds(gameTimer).ToString(@"mm\:ss");
+
+        if (time < PlayerPrefs.GetFloat(timeKey))
+        {
+            PlayerPrefs.SetFloat(timeKey, time);
+            res += $"Time: {timeStr} <color=yellow>New Record!</color>";
+        }
+        else
+        {
+            string bestTimeStr = TimeSpan.FromSeconds(PlayerPrefs.GetFloat(timeKey)).ToString(@"mm\:ss");
+            res += $"Time: {timeStr} (Best: {bestTimeStr})";
+        }
+
+        PlayerPrefs.Save();
+        return res;
     }
 
     private IEnumerator FadeInText(TextMeshProUGUI textUI)
