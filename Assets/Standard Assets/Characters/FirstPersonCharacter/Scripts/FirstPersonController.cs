@@ -185,7 +185,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (transform.position.y < -5)
             {
                 transform.position = m_respawnAreas[m_LastArea];
-                m_Health = m_Health == 0 ? 4 : m_Health - 1;
+                m_Health = m_Health == 1 ? 4 : m_Health - 1;
                 AudioSource.PlayClipAtPoint(m_HurtSound, transform.position);
             }
 
@@ -467,7 +467,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 // Take damage and go back to respawn point
                 GameObject carpet = GameObject.Find("Carpet");
                 transform.position = m_respawnAreas[carpet];
-                m_Health = m_Health == 0 ? 4 : m_Health - 1;
+                m_Health = m_Health == 1 ? 4 : m_Health - 1;
                 AudioSource.PlayClipAtPoint(m_HurtSound, transform.position);
             }
             
