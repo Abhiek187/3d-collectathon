@@ -20,8 +20,8 @@ public class FloatingPlatformScript : MonoBehaviour
         currentState = State.ToEnd; // start going to the end point
     }
 
-    // Update is called once per frame
-    void Update()
+    // FixedUpdate needed to move the player with the platform
+    void FixedUpdate()
     {
         /* Platform animation:
          * 1. Move to end point

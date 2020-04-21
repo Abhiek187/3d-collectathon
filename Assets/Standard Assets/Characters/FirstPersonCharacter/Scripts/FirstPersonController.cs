@@ -158,6 +158,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
             else
             {
+                transform.parent = null; // don't move with the platform in the air
+
                 // Check if can jump again in the air (and not falling)
                 if (m_Jump && m_Jumping && m_JumpCount > 0)
                 {
@@ -415,7 +417,22 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void RotateView()
         {
-            m_MouseLook.LookRotation (transform, m_Camera.transform);
+            /*if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
+            {
+                transform.rotation *= Quaternion.Euler(0, 180, 0);
+                m_Camera.transform.rotation *= Quaternion.Euler(0, 180, 0);
+                //print($"Before: {transform.localRotation.eulerAngles}");
+                //m_MouseLook.LookRotation(transform, m_Camera.transform);
+                //print($"After: {transform.localRotation.eulerAngles}");
+            }
+            else
+            {
+                //print($"420: {transform.rotation.eulerAngles}");
+                m_MouseLook.LookRotation(transform, m_Camera.transform);
+                //print($"422: {transform.rotation.eulerAngles}");
+            }*/
+
+            m_MouseLook.LookRotation(transform, m_Camera.transform);
         }
 
         private IEnumerator FadeOut(AudioSource source, float fadeTime)
@@ -468,7 +485,21 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 m_Health = m_Health == 0 ? 4 : m_Health - 1;
                 AudioSource.PlayClipAtPoint(m_HurtSound, transform.position);
             }
-                    
+            
+            // Make player move with platforms
+            if (hit.gameObject.name == "Platform" || hit.gameObject.name == "Carpet")
+            {
+                transform.parent = hit.gameObject.transform;
+                //print($"Before: {transform.rotation.eulerAngles}");
+                //transform.localRotation *= Quaternion.Euler(0, 180, 0); // don't suddenly face where the platform's facing
+                //m_Camera.transform.rotation *= Quaternion.Euler(0, 180, 0);
+                //print($"After: {transform.rotation.eulerAngles}");
+            }
+            else
+            {
+                transform.parent = null;
+            }
+
             onCarpet = hit.gameObject.name == "Carpet";
 
             Rigidbody body = hit.collider.attachedRigidbody;

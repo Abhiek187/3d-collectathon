@@ -24,8 +24,8 @@ public class MagicCarpetScript : MonoBehaviour
         currentState = State.Moving; // start going to each waypoint
     }
 
-    // Update is called once per frame
-    void Update()
+    // FixedUpdate is called every fixed frame (for moving w/ the player)
+    void FixedUpdate()
     {
         onCarpet = GameObject.Find("FPSController").GetComponent<FirstPersonController>().onCarpet;
         if (!onCarpet)
