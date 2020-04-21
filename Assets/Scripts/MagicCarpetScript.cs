@@ -45,13 +45,13 @@ public class MagicCarpetScript : MonoBehaviour
             if (Vector3.Distance(transform.position, nextPosition) > 0)
             {
                 // Rotate in the direction of next point
-                Vector3 direction = (nextPosition - transform.position).normalized;
+                /*Vector3 direction = (nextPosition - transform.position).normalized;
                 Quaternion angle = Quaternion.LookRotation(direction);
                 transform.rotation = Quaternion.Slerp(transform.rotation, angle,
-                    Time.deltaTime * speed);
+                    Time.fixedDeltaTime * speed);*/
 
                 transform.position = Vector3.MoveTowards(transform.position, nextPosition,
-                    Time.deltaTime * speed);
+                    Time.fixedDeltaTime * speed);
             }
             else
             {
@@ -72,7 +72,7 @@ public class MagicCarpetScript : MonoBehaviour
         }
         else
         {
-            timer += Time.deltaTime;
+            timer += Time.fixedDeltaTime;
 
             if (timer >= 1)
             {
@@ -90,7 +90,7 @@ public class MagicCarpetScript : MonoBehaviour
     {
         // Put carpet back at the beginning in case player falls or gets hurt
         transform.position = transform.parent.GetChild(1).transform.position; // move carpet back to start point
-        transform.rotation = Quaternion.Euler(0, 180, 0);
+        transform.rotation = Quaternion.Euler(0, 0, 0);
 
         nextIndex = 2;
         nextPoint = transform.parent.GetChild(nextIndex);

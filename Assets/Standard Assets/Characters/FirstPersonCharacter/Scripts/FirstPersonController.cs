@@ -417,21 +417,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void RotateView()
         {
-            /*if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
-            {
-                transform.rotation *= Quaternion.Euler(0, 180, 0);
-                m_Camera.transform.rotation *= Quaternion.Euler(0, 180, 0);
-                //print($"Before: {transform.localRotation.eulerAngles}");
-                //m_MouseLook.LookRotation(transform, m_Camera.transform);
-                //print($"After: {transform.localRotation.eulerAngles}");
-            }
-            else
-            {
-                //print($"420: {transform.rotation.eulerAngles}");
-                m_MouseLook.LookRotation(transform, m_Camera.transform);
-                //print($"422: {transform.rotation.eulerAngles}");
-            }*/
-
             m_MouseLook.LookRotation(transform, m_Camera.transform);
         }
 
@@ -490,10 +475,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (hit.gameObject.name == "Platform" || hit.gameObject.name == "Carpet")
             {
                 transform.parent = hit.gameObject.transform;
-                //print($"Before: {transform.rotation.eulerAngles}");
                 //transform.localRotation *= Quaternion.Euler(0, 180, 0); // don't suddenly face where the platform's facing
                 //m_Camera.transform.rotation *= Quaternion.Euler(0, 180, 0);
-                //print($"After: {transform.rotation.eulerAngles}");
             }
             else
             {

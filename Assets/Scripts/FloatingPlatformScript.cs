@@ -33,7 +33,7 @@ public class FloatingPlatformScript : MonoBehaviour
         {
             if (Vector3.Distance(transform.position, end.position) > 0)
             {
-                transform.position = Vector3.MoveTowards(transform.position, end.position, Time.deltaTime * speed);
+                transform.position = Vector3.MoveTowards(transform.position, end.position, Time.fixedDeltaTime * speed);
             }
             else
             {
@@ -44,7 +44,7 @@ public class FloatingPlatformScript : MonoBehaviour
         {
             if (Vector3.Distance(transform.position, start.position) > 0)
             {
-                transform.position = Vector3.MoveTowards(transform.position, start.position, Time.deltaTime * speed);
+                transform.position = Vector3.MoveTowards(transform.position, start.position, Time.fixedDeltaTime * speed);
             }
             else
             {
@@ -53,7 +53,7 @@ public class FloatingPlatformScript : MonoBehaviour
         }
         else
         {
-            timer += Time.deltaTime;
+            timer += Time.fixedDeltaTime;
 
             if (timer >= 1)
             {
