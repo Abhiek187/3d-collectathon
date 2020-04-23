@@ -110,6 +110,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 m_MoveDir.y = 0f;
                 m_Jumping = false;
                 m_JumpCount = m_Jumps; // reset number of jumps allowed after landing
+
+                if (onCarpet && transform.parent != null)
+                {
+                    // Don't suddenly face where the carpet's facing when landing
+                    float xCamera = -m_Camera.transform.localRotation.eulerAngles.x;
+                    float yRot = transform.localRotation.eulerAngles.y;
+                    float carpetYRot = transform.parent.rotation.eulerAngles.y;
+                    RotateCharacter(xCamera, yRot - carpetYRot);
+                }
             }
             if (!m_CharacterController.isGrounded && !m_Jumping && m_PreviouslyGrounded)
             {
@@ -154,6 +163,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
                     m_Jump = false;
                     m_Jumping = true;
                     m_JumpCount--;
+
+                    if (onCarpet && transform.parent != null)
+                    {
+                        // Keep the player's original rotation after jumping off the carpet
+                        float xCamera = -m_Camera.transform.localRotation.eulerAngles.x;
+                        float yRot = transform.localRotation.eulerAngles.y;
+                        float carpetYRot = transform.parent.rotation.eulerAngles.y;
+                        RotateCharacter(xCamera, carpetYRot + ((yRot > 180) ? (yRot - 360) : yRot));
+                    }
                 }
             }
             else
@@ -495,8 +513,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (hit.gameObject.name == "Platform" || hit.gameObject.name == "Carpet")
             {
                 transform.parent = hit.gameObject.transform;
-                //transform.localRotation *= Quaternion.Euler(0, 180, 0); // don't suddenly face where the platform's facing
-                //m_Camera.transform.rotation *= Quaternion.Euler(0, 180, 0);
             }
             else
             {
