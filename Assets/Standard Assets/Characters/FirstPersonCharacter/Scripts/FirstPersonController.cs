@@ -203,6 +203,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             bool movedRight = transform.position.x >= roomCenters[roomNum].x + 4;
             bool movedLeft = transform.position.x <= roomCenters[roomNum].x - 4;
             bool notInRoom = movedForward || movedBack || movedRight || movedLeft;
+            float xCamera = -m_Camera.transform.localRotation.eulerAngles.x;
 
             // Check if player moved correctly in the forest maze
             switch (roomNum)
@@ -213,11 +214,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
                     {
                         roomNum++;
                         transform.position = roomCenters[roomNum];
+                        RotateCharacter(xCamera, 0); // keep angle looking up and down, but face forward
                         AudioSource.PlayClipAtPoint(m_CorrectSound, transform.position);
                     }
                     else if (movedLeft || movedRight)
                     {
                         transform.position = roomCenters[0];
+                        RotateCharacter(xCamera, 0);
                         AudioSource.PlayClipAtPoint(m_WrongSound, transform.position);
                     }
 
@@ -228,12 +231,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
                     {
                         roomNum++;
                         transform.position = roomCenters[roomNum];
+                        RotateCharacter(xCamera, 0);
                         AudioSource.PlayClipAtPoint(m_CorrectSound, transform.position);
                     }
                     else if (notInRoom)
                     {
                         roomNum = 0;
                         transform.position = roomCenters[roomNum];
+                        RotateCharacter(xCamera, 0);
                         AudioSource.PlayClipAtPoint(m_WrongSound, transform.position);
                     }
 
@@ -244,12 +249,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
                     {
                         roomNum++;
                         transform.position = roomCenters[roomNum];
+                        RotateCharacter(xCamera, 0);
                         AudioSource.PlayClipAtPoint(m_CorrectSound, transform.position);
                     }
                     else if (notInRoom)
                     {
                         roomNum = 0;
                         transform.position = roomCenters[roomNum];
+                        RotateCharacter(xCamera, 0);
                         AudioSource.PlayClipAtPoint(m_WrongSound, transform.position);
                     }
 
@@ -260,12 +267,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
                     {
                         roomNum++;
                         transform.position = roomCenters[roomNum];
+                        RotateCharacter(xCamera, 0);
                         AudioSource.PlayClipAtPoint(m_CorrectSound, transform.position);
                     }
                     else if (notInRoom)
                     {
                         roomNum = 0;
                         transform.position = roomCenters[roomNum];
+                        RotateCharacter(xCamera, 0);
                         AudioSource.PlayClipAtPoint(m_WrongSound, transform.position);
                     }
 
@@ -276,12 +285,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
                     {
                         roomNum++;
                         transform.position = roomCenters[roomNum];
+                        RotateCharacter(xCamera, 0);
                         AudioSource.PlayClipAtPoint(m_CorrectSound, transform.position);
                     }
                     else if (notInRoom)
                     {
                         roomNum = 0;
                         transform.position = roomCenters[roomNum];
+                        RotateCharacter(xCamera, 0);
                         AudioSource.PlayClipAtPoint(m_WrongSound, transform.position);
                     }
 
@@ -292,12 +303,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
                     {
                         roomNum++;
                         transform.position = roomCenters[roomNum];
+                        RotateCharacter(xCamera, 0);
                         AudioSource.PlayClipAtPoint(m_CorrectSound, transform.position);
                     }
                     else if (notInRoom)
                     {
                         roomNum = 0;
                         transform.position = roomCenters[roomNum];
+                        RotateCharacter(xCamera, 0);
                         AudioSource.PlayClipAtPoint(m_WrongSound, transform.position);
                     }
 
@@ -308,6 +321,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                     {
                         roomNum = 0;
                         transform.position = roomCenters[roomNum];
+                        RotateCharacter(xCamera, 0);
                     }
 
                     break;
@@ -418,6 +432,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private void RotateView()
         {
             m_MouseLook.LookRotation(transform, m_Camera.transform);
+        }
+
+        private void RotateCharacter(float xRot, float yRot)
+        {
+            // Call this if transform.rotation changes
+            m_MouseLook.LookRotation(transform, m_Camera.transform, xRot, yRot);
         }
 
         private IEnumerator FadeOut(AudioSource source, float fadeTime)
