@@ -54,6 +54,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private GameObject m_LastArea;
         private int roomNum = 0; // # of forest room
         private readonly Vector3[] roomCenters = new Vector3[7];
+        private bool gotHit = false;
+        private float iframeTimer = 0f; // invincibility timer, after getting hit
 
         public bool onCarpet = false; // access this variable from MagicCarpetScript
         public int m_Health = 4;
@@ -126,6 +128,17 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
 
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
+
+            if (gotHit)
+            {
+                iframeTimer += Time.deltaTime;
+
+                if (iframeTimer > 1)
+                {
+                    gotHit = false;
+                    iframeTimer = 0;
+                }
+            }
         }
 
 
@@ -203,8 +216,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (transform.position.y < -5)
             {
                 transform.position = m_respawnAreas[m_LastArea];
-                m_Health = m_Health == 1 ? 4 : m_Health - 1;
-                AudioSource.PlayClipAtPoint(m_HurtSound, transform.position);
+                TakeDamage();
             }
 
             CheckForestState();
@@ -489,6 +501,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
             source.volume = endVolume; // return to original volume
         }
 
+        private void TakeDamage()
+        {
+            m_Health = m_Health == 1 ? 4 : m_Health - 1;
+            AudioSource.PlayClipAtPoint(m_HurtSound, transform.position);
+        }
 
         private void OnControllerColliderHit(ControllerColliderHit hit)
         {
@@ -505,8 +522,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 // Take damage and go back to respawn point
                 GameObject carpet = GameObject.Find("Carpet");
                 transform.position = m_respawnAreas[carpet];
-                m_Health = m_Health == 1 ? 4 : m_Health - 1;
-                AudioSource.PlayClipAtPoint(m_HurtSound, transform.position);
+                TakeDamage();
             }
             
             // Make player move with platforms
@@ -533,6 +549,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 return;
             }
             body.AddForceAtPosition(m_CharacterController.velocity*0.1f, hit.point, ForceMode.Impulse);
+        }
+
+        private void OnParticleCollision(GameObject other)
+        {
+            if (!gotHit)
+            {
+                TakeDamage();
+                gotHit = true; // be invulnerable some time after taking damage
+            }
         }
     }
 }
