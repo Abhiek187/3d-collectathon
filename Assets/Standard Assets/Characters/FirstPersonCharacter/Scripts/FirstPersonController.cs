@@ -524,6 +524,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 transform.position = m_respawnAreas[carpet];
                 TakeDamage();
             }
+            else if (hit.gameObject.name == "Fireball")
+            {
+                TakeDamage();
+                gotHit = true;
+            }
             
             // Make player move with platforms
             if (hit.gameObject.name == "Platform" || hit.gameObject.name == "Carpet")
