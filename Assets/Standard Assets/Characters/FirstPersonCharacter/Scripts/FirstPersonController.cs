@@ -216,7 +216,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (transform.position.y < -5)
             {
                 transform.position = m_respawnAreas[m_LastArea];
-                TakeDamage();
+                if (!gotHit) TakeDamage();
             }
 
             CheckForestState();
@@ -522,9 +522,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 // Take damage and go back to respawn point
                 GameObject carpet = GameObject.Find("Carpet");
                 transform.position = m_respawnAreas[carpet];
-                TakeDamage();
+                if (!gotHit) TakeDamage();
             }
-            else if (hit.gameObject.name == "Fireball")
+            else if (hit.gameObject.name == "Fireball" && !gotHit)
             {
                 TakeDamage();
                 gotHit = true;
@@ -540,7 +540,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 transform.parent = null;
             }
 
-            onCarpet = hit.gameObject.name == "Carpet";
+            onCarpet = hit.gameObject.name == "Carpet" || hit.gameObject.name.Contains("Molten Rock")
+                || hit.gameObject.name.Contains("Fireball"); // carpet can keep going if we're on the fire obstacles
 
             Rigidbody body = hit.collider.attachedRigidbody;
             //dont move the rigidbody if the character is on top of it
