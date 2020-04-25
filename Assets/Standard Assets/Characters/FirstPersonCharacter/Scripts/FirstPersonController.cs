@@ -524,7 +524,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 transform.position = m_respawnAreas[carpet];
                 if (!gotHit) TakeDamage();
             }
-            else if (hit.gameObject.name == "Fireball" && !gotHit)
+            else if (hit.gameObject.name.Contains("Fireball") && !gotHit)
             {
                 TakeDamage();
                 gotHit = true;
