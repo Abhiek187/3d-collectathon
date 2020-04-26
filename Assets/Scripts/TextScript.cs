@@ -17,6 +17,8 @@ public class TextScript : MonoBehaviour
     private int miniGemsTotal;
     private bool coroutineIsRunning = false;
 
+    public int miniGemsCount = 0; // access count for end screen
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +34,7 @@ public class TextScript : MonoBehaviour
     void Update()
     {
         health = GameObject.Find("FPSController").GetComponent<FirstPersonController>().m_Health;
+        miniGemsCount = miniGemsTotal - miniGems.childCount;
 
         if (health == 4 && health != prevHealth)
         {
@@ -42,7 +45,7 @@ public class TextScript : MonoBehaviour
             // Don't display the usual text if we're showing the gems getting lost
             textUI.SetText($"<size=100><sprite={health}></size>\n" + // sprite # corresponds to # of hearts
             $"<sprite=6> x <color=yellow>{megaGemsTotal - megaGems.childCount}/{megaGemsTotal}</color>\n" +
-            $"<sprite=5> x <color=blue>{miniGemsTotal - miniGems.childCount}</color>");
+            $"<sprite=5> x <color=blue>{miniGemsCount}</color>");
         }
 
         prevHealth = health;

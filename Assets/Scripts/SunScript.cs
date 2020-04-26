@@ -10,8 +10,6 @@ public class SunScript : MonoBehaviour
     [SerializeField] private ParticleSystem fireworks;
 
     private Transform megaGems;
-    private Transform miniGems;
-    private int miniGemsTotal;
     private TextMeshProUGUI congratsText;
     private GameObject restartButton;
     private const float duration = 3f;
@@ -25,8 +23,6 @@ public class SunScript : MonoBehaviour
     void Start()
     {
         megaGems = GameObject.Find("Mega Gems").transform;
-        miniGems = GameObject.Find("Mini Gems").transform;
-        miniGemsTotal = miniGems.childCount;
         congratsText = GameObject.Find("Congrats").GetComponent<TextMeshProUGUI>();
         congratsText.gameObject.SetActive(false); // hide congrats message initially
         restartButton = GameObject.Find("Restart Button");
@@ -67,7 +63,7 @@ public class SunScript : MonoBehaviour
         {
             intensity = 0;
             RenderSettings.skybox = nightSky; // make the sky night
-            int miniGemsCollected = miniGemsTotal - miniGems.childCount;
+            int miniGemsCollected = GameObject.Find("Stats").GetComponent<TextScript>().miniGemsCount;
 
             congratsText.SetText(CreateTextString(miniGemsCollected, gameTimer));
             congratsText.gameObject.SetActive(true); // show congrats message
