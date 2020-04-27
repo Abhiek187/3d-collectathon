@@ -51,7 +51,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private const int m_Jumps = 2; // number of jumps allowed before landing
         private int m_JumpCount; // number of jumps remaining
         private Dictionary<GameObject, Vector3> m_respawnAreas;
-        private GameObject m_LastArea;
         private int roomNum = 0; // # of forest room
         private readonly Vector3[] roomCenters = new Vector3[7];
         private bool gotHit = false;
@@ -59,6 +58,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         public bool onCarpet = false; // access this variable from MagicCarpetScript
         public int m_Health = 4;
+        public GameObject m_LastArea;
 
         // Use this for initialization
         private void Start()
