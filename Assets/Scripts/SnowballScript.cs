@@ -13,6 +13,7 @@ public class SnowballScript : MonoBehaviour
 
     private const float growRate = 0.01f;
     private const float meltRate = 0.05f;
+    private bool buttonIsPushed = false;
 
     // Start is called before the first frame update
     void Start()
@@ -49,7 +50,7 @@ public class SnowballScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Button")
+        if (collision.gameObject.CompareTag("Button") && !buttonIsPushed
             && collision.gameObject.GetComponent<Renderer>().sharedMaterial != endButtonMaterial)
         {
             StartCoroutine(PushButton(collision.gameObject));
@@ -59,6 +60,7 @@ public class SnowballScript : MonoBehaviour
     private IEnumerator PushButton(GameObject button)
     {
         // Move button down and turn it green
+        buttonIsPushed = true; // indicates we're running the coroutine
         Vector3 endPosition = button.transform.position + Vector3.down * 2;
         float timer = 0f;
 
@@ -71,5 +73,6 @@ public class SnowballScript : MonoBehaviour
         
         button.GetComponent<Renderer>().material = endButtonMaterial;
         GameObject.Find("Hidden Platform").GetComponent<RaisePlatformScript>().buttonsPressed++;
+        buttonIsPushed = false;
     }
 }
