@@ -4,15 +4,15 @@ This is a game created in Unity where the player has to collect 5 Mega Gems scat
 
 ## Controls
 
-WASD/↑←↓→: Move
+**WASD/↑←↓→:** Move
 
-Mouse: Look Around
+**Mouse:** Look Around
 
-Left Shift: Sprint
+**Left Shift:** Sprint
 
-Space: Jump/Double Jump
+**Space:** Jump/Double Jump
 
-P: Pause/Resume
+**P:** Pause/Resume
 
 ## How to Play
 
