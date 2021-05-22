@@ -6,7 +6,7 @@ using UnityEngine.TestTools;
 
 namespace Tests
 {
-    public class TestSuite
+    public class CentralHubTests
     {
         [UnitySetUp]
         public IEnumerator Setup()
@@ -86,6 +86,17 @@ namespace Tests
             GameObject restartButton = GameObject.Find("Restart Button");
             Assert.True(congrats.activeInHierarchy);
             Assert.True(restartButton.activeInHierarchy);
+        }
+    }
+
+    public class SnowTests
+    {
+        [UnitySetUp]
+        public IEnumerator Setup()
+        {
+            // Load the Game Scene and wait for everything to load
+            SceneManager.LoadScene("GameScene");
+            yield return null;
         }
 
         [UnityTest]
@@ -182,12 +193,23 @@ namespace Tests
             GameObject snowball3 = GameObject.Find("Snowball (2)");
             GameObject button3 = GameObject.Find("Button (2)");
             snowball3.transform.position = button3.transform.position + Vector3.up * 10;
-            
+
             // Wait for all the buttons to be pressed and the hidden platform to rise
             yield return new WaitForSeconds(3);
 
             Vector3 newPlatformPosition = hiddenPlatform.transform.position;
             Assert.Greater(newPlatformPosition.y, oldPlatformPosition.y);
+        }
+    }
+
+    public class FireTests
+    {
+        [UnitySetUp]
+        public IEnumerator Setup()
+        {
+            // Load the Game Scene and wait for everything to load
+            SceneManager.LoadScene("GameScene");
+            yield return null;
         }
 
         [UnityTest]
