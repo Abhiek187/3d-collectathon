@@ -1,5 +1,7 @@
 # 3D Collectathon
 
+![3D Collectathon](screenshot.png)
+
 This is a game created in Unity where the player has to collect 5 Mega Gems scattered across the area. The Mega Gems can be gotten by solving puzzles or clearing platforming challenges. The player is free to explore the 5 open terrains in first person and collect Mini Gems along the way. The player is scored at the end based on their time and Mini Gem count. The game is inspired by my love of 3D platformers and collectathons from the 90s and 2000s. It is designed to be an interactive, imaginative, and immersive virtual world. Models were created using Blender and techniques like model management and baked lighting are used to deliver a smooth experience. Plenty of scripting and particle effects are used to give objects intelligent behavior and make the world come to life.
 
 ## Controls
